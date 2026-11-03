@@ -1,0 +1,46 @@
+
+name: Test notifica Telegram
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  telegram-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invia messaggio di prova
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.parse
+          import urllib.request
+
+          token = os.environ["BOT_TOKEN"]
+          chat_id = os.environ["CHAT_ID"]
+
+          if not token or not chat_id:
+              raise ValueError("Credenziali Telegram mancanti")
+
+          payload = urllib.parse.urlencode({
+              "chat_id": chat_id,
+              "text": "Test riuscito! iPhone Stock Monitor collegato a Telegram."
+          }).encode()
+
+          url = f"https://api.telegram.org/bot{token}/sendMessage"
+          req = urllib.request.Request(url, data=payload, method="POST")
+
+          with urllib.request.urlopen(req, timeout=20) as response:
+              result = json.load(response)
+
+          if not result.get("ok"):
+              raise RuntimeError("Telegram non ha confermato l'invio")
+
+          print("Messaggio Telegram inviato correttamente")
+          PY
