@@ -1,0 +1,32 @@
+
+name: Apple Store - Test disponibilita
+
+on:
+  workflow_dispatch:
+    inputs:
+      apple_part_number:
+        description: "Codice prodotto Apple italiano"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Scarica repository
+        uses: actions/checkout@v4
+
+      - name: Configura Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verifica Apple Store
+        env:
+          APPLE_PART_NUMBER: ${{ inputs.apple_part_number }}
+        run: python check_apple.py
