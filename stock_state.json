@@ -1,4 +1,18 @@
 {
   "carosello": false,
-  "liberty": false
+  "liberty": false,
+  "_hourly_report": {
+    "since": "2026-11-03T15:26:54.733910+00:00",
+    "checks": [
+      {
+        "at": "2026-11-03T15:26:54.733910+00:00",
+        "ok": true,
+        "stock": {
+          "carosello": false,
+          "liberty": false
+        }
+      }
+    ],
+    "last_sent_hour": "2026-11-03T15"
+  }
 }
