@@ -3,7 +3,8 @@ name: iPhone Stock Monitor - Automatico
 
 on:
   schedule:
-    - cron: "3/5 * * * *"
+    # UTC: minuti 2, 7, 12, ..., 57 di ogni ora (ogni 5 minuti).
+    - cron: "2-59/5 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -19,6 +20,15 @@ jobs:
     timeout-minutes: 3
 
     steps:
+      - name: Registra origine esecuzione
+        env:
+          TRIGGER_EVENT: ${{ github.event_name }}
+          TRIGGER_SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          echo "Evento: $TRIGGER_EVENT"
+          echo "Pianificazione UTC: $TRIGGER_SCHEDULE"
+          date -u "+Avvio UTC: %Y-%m-%dT%H:%M:%SZ"
+
       - name: Scarica repository
         uses: actions/checkout@v4
         with:
