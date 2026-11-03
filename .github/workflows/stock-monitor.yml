@@ -46,6 +46,7 @@ jobs:
         run: python monitor.py
 
       - name: Salva ultimo stato
+        if: ${{ always() }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -54,3 +55,4 @@ jobs:
             git commit -m "Update Apple stock state"
             git push
           fi
+
