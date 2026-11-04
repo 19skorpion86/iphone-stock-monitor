@@ -2,65 +2,8 @@
   "carosello": false,
   "liberty": false,
   "_hourly_report": {
-    "since": "2026-11-04T10:05:27.456847+00:00",
-    "checks": [
-      {
-        "at": "2026-11-04T10:10:34.585749+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T10:20:33.204400+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T10:35:24.666248+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T10:40:35.793446+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T10:49:37.410473+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T10:50:42.891419+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T10:55:25.650428+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      }
-    ],
-    "last_sent_hour": "2026-11-04T10"
+    "since": "2026-11-04T11:01:04.706570+00:00",
+    "checks": [],
+    "last_sent_hour": "2026-11-04T11"
   }
 }
