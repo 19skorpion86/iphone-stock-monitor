@@ -2,73 +2,8 @@
   "carosello": false,
   "liberty": false,
   "_hourly_report": {
-    "since": "2026-11-04T09:01:02.648595+00:00",
-    "checks": [
-      {
-        "at": "2026-11-04T09:05:26.050761+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T09:10:31.978801+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T09:15:34.165649+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T09:20:34.553096+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T09:25:24.488828+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T09:30:49.432869+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T09:35:27.950583+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      },
-      {
-        "at": "2026-11-04T09:45:34.058020+00:00",
-        "ok": true,
-        "stock": {
-          "carosello": false,
-          "liberty": false
-        }
-      }
-    ],
-    "last_sent_hour": "2026-11-04T09"
+    "since": "2026-11-04T10:05:27.456847+00:00",
+    "checks": [],
+    "last_sent_hour": "2026-11-04T10"
   }
 }
