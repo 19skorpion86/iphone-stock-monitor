@@ -3,7 +3,16 @@
   "liberty": false,
   "_hourly_report": {
     "since": "2026-11-05T06:00:59.990016+00:00",
-    "checks": [],
+    "checks": [
+      {
+        "at": "2026-11-05T06:05:22.149976+00:00",
+        "ok": true,
+        "stock": {
+          "carosello": false,
+          "liberty": false
+        }
+      }
+    ],
     "last_sent_hour": "2026-11-05T06"
   }
 }
