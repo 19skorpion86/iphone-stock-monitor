@@ -59,6 +59,11 @@
           "carosello": false,
           "liberty": false
         }
+      },
+      {
+        "at": "2026-11-05T03:40:29.080052+00:00",
+        "ok": false,
+        "error": "HTTPError"
       }
     ],
     "last_sent_hour": "2026-11-05T03"
