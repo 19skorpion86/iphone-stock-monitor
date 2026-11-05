@@ -35,6 +35,14 @@
           "carosello": false,
           "liberty": false
         }
+      },
+      {
+        "at": "2026-11-05T14:25:24.229824+00:00",
+        "ok": true,
+        "stock": {
+          "carosello": false,
+          "liberty": false
+        }
       }
     ],
     "last_sent_hour": "2026-11-05T14"
