@@ -12,6 +12,7 @@ STATE_FILE = Path("stock_state.json")
 TARGETS = {
     "carosello": "Apple Store Carosello - Carugate",
     "liberty": "Apple Piazza Liberty - Milano",
+    "fiordaliso": "Apple Fiordaliso - Rozzano",
 }
 
 
@@ -56,7 +57,7 @@ def get_stock():
             }
 
     if set(result) != set(TARGETS):
-        raise ValueError("Non sono stati trovati entrambi gli Apple Store")
+        raise ValueError("Non sono stati trovati tutti gli Apple Store monitorati")
 
     return result
 
@@ -159,8 +160,9 @@ def run_with_hourly_report():
             f"Riuscite: {len(successful)} | Errori: {failed}",
         ]
         for key, name in TARGETS.items():
-            available = sum(item["stock"][key] for item in successful)
-            latest = ("disponibile" if successful[-1]["stock"][key] else "non disponibile") if successful else "non verificabile"
+            store_checks = [item for item in successful if key in item["stock"]]
+            available = sum(item["stock"][key] for item in store_checks)
+            latest = ("disponibile" if store_checks[-1]["stock"][key] else "non disponibile") if store_checks else "non verificabile"
             lines.append(f"{name}: {available} rilevazioni disponibili; ultimo esito {latest}.")
         lines.append("Conteggi delle esecuzioni registrate; eventuali mancati avvii non sono verifiche effettuate.")
         try:
@@ -184,4 +186,3 @@ if __name__ == "__main__":
     except Exception as exc:
         print(f"ERRORE TECNICO: {exc}", file=sys.stderr)
         sys.exit(2)
-
