@@ -155,6 +155,7 @@ def run_with_hourly_report():
         end = now.astimezone(local)
         lines = [
             "RIEPILOGO ORARIO VERIFICHE IPHONE",
+            "",
             f"Periodo: {start:%d/%m %H:%M} – {end:%d/%m %H:%M} (Italia)",
             f"Verifiche effettuate: {len(checks)}",
             f"Riuscite: {len(successful)} | Errori: {failed}",
@@ -163,7 +164,9 @@ def run_with_hourly_report():
             store_checks = [item for item in successful if key in item["stock"]]
             available = sum(item["stock"][key] for item in store_checks)
             latest = ("disponibile" if store_checks[-1]["stock"][key] else "non disponibile") if store_checks else "non verificabile"
+            lines.append("")
             lines.append(f"{name}: {available} rilevazioni disponibili; ultimo esito {latest}.")
+        lines.append("")
         lines.append("Conteggi delle esecuzioni registrate; eventuali mancati avvii non sono verifiche effettuate.")
         try:
             notify("\n".join(lines))
