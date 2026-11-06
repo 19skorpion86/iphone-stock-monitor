@@ -4,7 +4,17 @@
   "fiordaliso": false,
   "_hourly_report": {
     "since": "2026-11-06T18:01:03.420955+00:00",
-    "checks": [],
+    "checks": [
+      {
+        "at": "2026-11-06T18:05:34.157418+00:00",
+        "ok": true,
+        "stock": {
+          "carosello": false,
+          "liberty": false,
+          "fiordaliso": false
+        }
+      }
+    ],
     "last_sent_hour": "2026-11-06T18"
   }
 }
