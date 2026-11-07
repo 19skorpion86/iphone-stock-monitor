@@ -65,18 +65,21 @@ def get_stock(sku):
     return result
 
 
-def notify(message):
+def notify(message, parse_mode=None):
     token = os.environ["TELEGRAM_BOT_TOKEN"]
     chat_id = os.environ["TELEGRAM_CHAT_ID"]
 
     if not token or not chat_id:
         raise ValueError("Credenziali Telegram mancanti")
 
-    payload = urllib.parse.urlencode({
+    payload_data = {
         "chat_id": chat_id,
         "text": message,
         "disable_web_page_preview": "true",
-    }).encode()
+    }
+    if parse_mode:
+        payload_data["parse_mode"] = parse_mode
+    payload = urllib.parse.urlencode(payload_data).encode()
 
     req = urllib.request.Request(
         f"https://api.telegram.org/bot{token}/sendMessage",
@@ -147,15 +150,14 @@ def run_with_hourly_report():
         local = ZoneInfo("Europe/Rome")
         start = datetime.fromisoformat(report["since"]).astimezone(local)
         end = now.astimezone(local)
+        from html import escape
         lines = [
-            "RIEPILOGO ORARIO VERIFICHE IPHONE", "",
-            f"Periodo: {start:%d/%m %H:%M} – {end:%d/%m %H:%M} (Italia)",
-            f"Verifiche effettuate: {len(checks)}",
-            f"Riuscite: {successful} | Con errori: {len(checks) - successful}",
+            f"Periodo: {start:%d/%m %H:%M} - {end:%H:%M}" if start.date() == end.date() else f"Periodo: {start:%d/%m %H:%M} - {end:%d/%m %H:%M}",
+            f"Verifiche effettuate: {len(checks)} - Riuscite: {successful} | Errori: {len(checks) - successful}",
         ]
-        for sku, product in PRODUCTS.items():
-            lines.extend(["", f"{product} ({sku})"])
-            for store, name in TARGETS.items():
+        for store, name in TARGETS.items():
+            lines.extend(["", f"<b>{escape(name)}</b>"])
+            for sku, product in PRODUCTS.items():
                 key = stock_key(sku, store)
                 values = []
                 for item in checks:
@@ -165,10 +167,10 @@ def run_with_hourly_report():
                     elif sku == "MK2G4QL/A" and store in stock:
                         values.append(stock[store])
                 latest = ("disponibile" if values[-1] else "non disponibile") if values else "non verificabile"
-                lines.append(f"{name}: {sum(values)}/{len(values)} disponibili; ultimo esito {latest}.")
-        lines.extend(["", "Conteggi delle verifiche effettuate; i mancati avvii non sono inclusi."])
+                colour = product.removeprefix("iPhone Duo 512 GB ")
+                lines.append(f"{escape(colour)} - {escape(sku)}: {sum(values)} rilevazioni disponibili; ultimo esito {latest}.")
         try:
-            notify("\n".join(lines))
+            notify("\n".join(lines), parse_mode="HTML")
             report = {"since": now_iso, "checks": [], "last_sent_hour": hour}
             print("RIEPILOGO ORARIO INVIATO")
         except Exception as exc:
@@ -187,3 +189,4 @@ if __name__ == "__main__":
     except Exception as exc:
         print(f"ERRORE TECNICO: {type(exc).__name__}", file=sys.stderr)
         sys.exit(2)
+
