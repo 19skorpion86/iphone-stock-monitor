@@ -15,46 +15,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Invia riepilogo di prova nel nuovo formato
+      - name: Invia notifica di prova nel formato disponibilita
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python - <<'PY'
-          import json
-          from datetime import datetime, timezone
-          from zoneinfo import ZoneInfo
-          from monitor import PRODUCTS, TARGETS, STATE_FILE, stock_key, notify
-          
-          report = json.loads(STATE_FILE.read_text()).get("_hourly_report", {})
-          checks = report.get("checks", [])
-          successful = sum(item["ok"] for item in checks)
-          now = datetime.now(timezone.utc)
-          local = ZoneInfo("Europe/Rome")
-          start = datetime.fromisoformat(report.get("since", now.isoformat())).astimezone(local)
-          end = now.astimezone(local)
-          from html import escape
-          lines = [
-              f"Periodo: {start:%d/%m %H:%M} - {end:%H:%M}" if start.date() == end.date() else f"Periodo: {start:%d/%m %H:%M} - {end:%d/%m %H:%M}",
-              f"Verifiche effettuate: {len(checks)} - Riuscite: {successful} | Errori: {len(checks) - successful}",
-          ]
-          for store, name in TARGETS.items():
-              lines.extend(["", f"<b>{escape(name)}</b>"])
-              for sku, product in PRODUCTS.items():
-                  key = stock_key(sku, store)
-                  values = []
-                  for item in checks:
-                      stock = item.get("stock", {})
-                      if key in stock:
-                          values.append(stock[key])
-                      elif sku == "MK2G4QL/A" and store in stock:
-                          values.append(stock[store])
-                  latest = ("disponibile" if values[-1] else "non disponibile") if values else "non verificabile"
-                  colour = product.removeprefix("iPhone Duo 512 GB ")
-                  lines.append(f"{escape(colour)} - {escape(sku)}: {sum(values)} rilevazioni disponibili; ultimo esito {latest}.")
-          
-          notify("<b>RIEPILOGO DI PROVA</b>\n\n" + "\n".join(lines), parse_mode="HTML")
-          print("RIEPILOGO DI PROVA INVIATO: Telegram ha confermato ok=true")
-          
+          from monitor import PRODUCTS, TARGETS, availability_message, notify
+          sku = "MK2F4QL/A"
+          message = (
+              "PROVA - DISPONIBILITA SIMULATA, NON REALE\n\n"
+              + availability_message(sku, PRODUCTS[sku], TARGETS["carosello"])
+          )
+          notify(message)
+          print("NOTIFICA DI PROVA INVIATA: Telegram ha confermato ok=true")
           PY
 
