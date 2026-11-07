@@ -85,6 +85,15 @@
           "liberty": false,
           "fiordaliso": false
         }
+      },
+      {
+        "at": "2026-11-07T17:50:30.565728+00:00",
+        "ok": true,
+        "stock": {
+          "carosello": false,
+          "liberty": false,
+          "fiordaliso": false
+        }
       }
     ],
     "last_sent_hour": "2026-11-07T17"
