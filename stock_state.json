@@ -2,185 +2,23 @@
   "carosello": false,
   "liberty": false,
   "fiordaliso": false,
-  "_hourly_report": {
-    "since": "2026-11-07T18:00:59.232936+00:00",
-    "checks": [
-      {
-        "at": "2026-11-07T18:01:16.621820+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:02:17.146494+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:03:14.216906+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:04:16.617665+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:05:24.595897+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:06:18.294390+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:07:15.273542+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:08:16.601270+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:09:16.688800+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:10:32.477370+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:11:14.738822+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:12:18.291168+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      },
-      {
-        "at": "2026-11-07T18:13:14.740508+00:00",
-        "ok": true,
-        "stock": {
-          "MK2F4QL/A:carosello": false,
-          "MK2F4QL/A:liberty": false,
-          "MK2F4QL/A:fiordaliso": false,
-          "MK2G4QL/A:carosello": false,
-          "MK2G4QL/A:liberty": false,
-          "MK2G4QL/A:fiordaliso": false
-        },
-        "errors": []
-      }
-    ],
-    "last_sent_hour": "2026-11-07T18"
-  },
   "MK2F4QL/A:carosello": false,
   "MK2F4QL/A:liberty": false,
   "MK2F4QL/A:fiordaliso": false,
   "MK2G4QL/A:carosello": false,
   "MK2G4QL/A:liberty": false,
-  "MK2G4QL/A:fiordaliso": false
+  "MK2G4QL/A:fiordaliso": false,
+  "_last_check": {
+    "at": "2026-11-07T18:14:18.759250+00:00",
+    "ok": true,
+    "stock": {
+      "MK2F4QL/A:carosello": false,
+      "MK2F4QL/A:liberty": false,
+      "MK2F4QL/A:fiordaliso": false,
+      "MK2G4QL/A:carosello": false,
+      "MK2G4QL/A:liberty": false,
+      "MK2G4QL/A:fiordaliso": false
+    },
+    "errors": []
+  }
 }
