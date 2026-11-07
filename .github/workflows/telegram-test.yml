@@ -1,4 +1,3 @@
-
 name: Test notifica Telegram
 
 on:
@@ -10,37 +9,52 @@ permissions:
 jobs:
   telegram-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
-      - name: Invia messaggio di prova
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Invia riepilogo di prova nel nuovo formato
         env:
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python - <<'PY'
           import json
-          import os
-          import urllib.parse
-          import urllib.request
-
-          token = os.environ["BOT_TOKEN"]
-          chat_id = os.environ["CHAT_ID"]
-
-          if not token or not chat_id:
-              raise ValueError("Credenziali Telegram mancanti")
-
-          payload = urllib.parse.urlencode({
-              "chat_id": chat_id,
-              "text": "Test riuscito! iPhone Stock Monitor collegato a Telegram."
-          }).encode()
-
-          url = f"https://api.telegram.org/bot{token}/sendMessage"
-          req = urllib.request.Request(url, data=payload, method="POST")
-
-          with urllib.request.urlopen(req, timeout=20) as response:
-              result = json.load(response)
-
-          if not result.get("ok"):
-              raise RuntimeError("Telegram non ha confermato l'invio")
-
-          print("Messaggio Telegram inviato correttamente")
+          from datetime import datetime, timezone
+          from zoneinfo import ZoneInfo
+          from monitor import PRODUCTS, TARGETS, STATE_FILE, stock_key, notify
+          
+          report = json.loads(STATE_FILE.read_text()).get("_hourly_report", {})
+          checks = report.get("checks", [])
+          successful = sum(item["ok"] for item in checks)
+          now = datetime.now(timezone.utc)
+          local = ZoneInfo("Europe/Rome")
+          start = datetime.fromisoformat(report.get("since", now.isoformat())).astimezone(local)
+          end = now.astimezone(local)
+          from html import escape
+          lines = [
+              f"Periodo: {start:%d/%m %H:%M} - {end:%H:%M}" if start.date() == end.date() else f"Periodo: {start:%d/%m %H:%M} - {end:%d/%m %H:%M}",
+              f"Verifiche effettuate: {len(checks)} - Riuscite: {successful} | Errori: {len(checks) - successful}",
+          ]
+          for store, name in TARGETS.items():
+              lines.extend(["", f"<b>{escape(name)}</b>"])
+              for sku, product in PRODUCTS.items():
+                  key = stock_key(sku, store)
+                  values = []
+                  for item in checks:
+                      stock = item.get("stock", {})
+                      if key in stock:
+                          values.append(stock[key])
+                      elif sku == "MK2G4QL/A" and store in stock:
+                          values.append(stock[store])
+                  latest = ("disponibile" if values[-1] else "non disponibile") if values else "non verificabile"
+                  colour = product.removeprefix("iPhone Duo 512 GB ")
+                  lines.append(f"{escape(colour)} - {escape(sku)}: {sum(values)} rilevazioni disponibili; ultimo esito {latest}.")
+          
+          notify("<b>RIEPILOGO DI PROVA</b>\n\n" + "\n".join(lines), parse_mode="HTML")
+          print("RIEPILOGO DI PROVA INVIATO: Telegram ha confermato ok=true")
+          
           PY
+
