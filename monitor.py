@@ -6,7 +6,10 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-SKU = "MK2G4QL/A"
+PRODUCTS = {
+    "MK2F4QL/A": "iPhone Duo 512 GB Bianco Stellare",
+    "MK2G4QL/A": "iPhone Duo 512 GB Cielo Notturno",
+}
 STATE_FILE = Path("stock_state.json")
 
 TARGETS = {
@@ -16,12 +19,12 @@ TARGETS = {
 }
 
 
-def get_stock():
+def get_stock(sku):
     params = urllib.parse.urlencode({
         "pl": "true",
         "mts.0": "regular",
         "location": "20061",
-        "parts.0": SKU,
+        "parts.0": sku,
     })
 
     url = "https://www.apple.com/it/shop/retail/pickup-message?" + params
@@ -42,7 +45,7 @@ def get_stock():
             if key not in name.lower():
                 continue
 
-            stock = store.get("partsAvailability", {}).get(SKU)
+            stock = store.get("partsAvailability", {}).get(sku)
             if not isinstance(stock, dict):
                 raise ValueError(f"SKU mancante per {name}")
 
@@ -88,38 +91,8 @@ def notify(message):
         raise RuntimeError("Telegram non ha confermato l'invio")
 
 
-def main():
-    current = get_stock()
-
-    previous = {}
-    if STATE_FILE.exists():
-        previous = json.loads(STATE_FILE.read_text())
-
-    new_state = {}
-
-    for key, info in current.items():
-        available = info["pickup"] == "available"
-        new_state[key] = available
-
-        if available and not previous.get(key, False):
-            message = (
-                "IPHONE DISPONIBILE - VERIFICARE SUBITO\n\n"
-                "iPhone Duo 512 GB Cielo Notturno\n"
-                f"Negozio: {TARGETS[key]}\n"
-                f"Stato Apple: {info['pickup']}\n"
-                f"Indicazioni ritiro: {info['quote']}\n\n"
-                "Prezzo indicativo di catalogo: 2.619 EUR\n"
-                "Prezzo finale e ritiro da riconfermare.\n"
-                "https://www.apple.com/it/shop/buy-iphone/iphone-duo"
-            )
-            notify(message)
-            print(f"NOTIFICA INVIATA: {key}")
-        else:
-            print(f"{TARGETS[key]}: {info['pickup']}")
-
-    STATE_FILE.write_text(
-        json.dumps(new_state, indent=2) + "\n"
-    )
+def stock_key(sku, store):
+    return f"{sku}:{store}"
 
 
 def run_with_hourly_report():
@@ -128,64 +101,89 @@ def run_with_hourly_report():
 
     now = datetime.now(timezone.utc)
     now_iso = now.isoformat()
-    saved = json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else {}
-    report = saved.get("_hourly_report", {
+    state = json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else {}
+    report = state.get("_hourly_report", {
         "since": now_iso, "checks": [], "last_sent_hour": now.strftime("%Y-%m-%dT%H")
     })
-    error = None
-    try:
-        main()
-        state = json.loads(STATE_FILE.read_text())
-        record = {"at": now_iso, "ok": True,
-                  "stock": {key: state[key] for key in TARGETS}}
-    except Exception as exc:
-        error = exc
-        state = json.loads(STATE_FILE.read_text()) if STATE_FILE.exists() else saved
-        # Do not persist exception text: HTTP errors can include credential-bearing URLs.
-        record = {"at": now_iso, "ok": False, "error": type(exc).__name__}
-
+    record = {"at": now_iso, "ok": True, "stock": {}, "errors": []}
+    for sku, product in PRODUCTS.items():
+        try:
+            current = get_stock(sku)
+        except Exception as exc:
+            record["ok"] = False
+            record["errors"].append(f"{sku}: {type(exc).__name__}")
+            print(f"ERRORE CONTROLLO {sku}: {type(exc).__name__}", file=sys.stderr)
+            continue
+        for store, info in current.items():
+            key = stock_key(sku, store)
+            available = info["pickup"] == "available"
+            record["stock"][key] = available
+            previous = state.get(key, state.get(store, False) if sku == "MK2G4QL/A" else False)
+            if available and not previous:
+                message = (
+                    "IPHONE DISPONIBILE - VERIFICARE SUBITO\n\n"
+                    f"{product}\nCodice: {sku}\n"
+                    f"Negozio: {TARGETS[store]}\n"
+                    f"Stato Apple: {info['pickup']}\n"
+                    f"Indicazioni ritiro: {info['quote']}\n\n"
+                    "Prezzo finale e ritiro da riconfermare.\n"
+                    "https://www.apple.com/it/shop/buy-iphone/iphone-duo"
+                )
+                try:
+                    notify(message)
+                    print(f"NOTIFICA INVIATA: {sku} {store}")
+                except Exception as exc:
+                    record["ok"] = False
+                    record["errors"].append(f"Telegram {sku} {store}: {type(exc).__name__}")
+                    # Keep previous state to retry the alert at the next check.
+                    continue
+            state[key] = available
+            print(f"{sku} | {TARGETS[store]}: {info['pickup']}")
     report["checks"].append(record)
     hour = now.strftime("%Y-%m-%dT%H")
     if hour != report["last_sent_hour"]:
         checks = report["checks"]
-        successful = [item for item in checks if item["ok"]]
-        failed = len(checks) - len(successful)
+        successful = sum(item["ok"] for item in checks)
         local = ZoneInfo("Europe/Rome")
         start = datetime.fromisoformat(report["since"]).astimezone(local)
         end = now.astimezone(local)
         lines = [
-            "RIEPILOGO ORARIO VERIFICHE IPHONE",
-            "",
+            "RIEPILOGO ORARIO VERIFICHE IPHONE", "",
             f"Periodo: {start:%d/%m %H:%M} – {end:%d/%m %H:%M} (Italia)",
             f"Verifiche effettuate: {len(checks)}",
-            f"Riuscite: {len(successful)} | Errori: {failed}",
+            f"Riuscite: {successful} | Con errori: {len(checks) - successful}",
         ]
-        for key, name in TARGETS.items():
-            store_checks = [item for item in successful if key in item["stock"]]
-            available = sum(item["stock"][key] for item in store_checks)
-            latest = ("disponibile" if store_checks[-1]["stock"][key] else "non disponibile") if store_checks else "non verificabile"
-            lines.append("")
-            lines.append(f"{name}: {available} rilevazioni disponibili; ultimo esito {latest}.")
-        lines.append("")
-        lines.append("Conteggi delle esecuzioni registrate; eventuali mancati avvii non sono verifiche effettuate.")
+        for sku, product in PRODUCTS.items():
+            lines.extend(["", f"{product} ({sku})"])
+            for store, name in TARGETS.items():
+                key = stock_key(sku, store)
+                values = []
+                for item in checks:
+                    stock = item.get("stock", {})
+                    if key in stock:
+                        values.append(stock[key])
+                    elif sku == "MK2G4QL/A" and store in stock:
+                        values.append(stock[store])
+                latest = ("disponibile" if values[-1] else "non disponibile") if values else "non verificabile"
+                lines.append(f"{name}: {sum(values)}/{len(values)} disponibili; ultimo esito {latest}.")
+        lines.extend(["", "Conteggi delle verifiche effettuate; i mancati avvii non sono inclusi."])
         try:
             notify("\n".join(lines))
             report = {"since": now_iso, "checks": [], "last_sent_hour": hour}
             print("RIEPILOGO ORARIO INVIATO")
         except Exception as exc:
-            # Keep unsent checks for retry at the next execution.
+            record["ok"] = False
+            record["errors"].append(f"Riepilogo Telegram: {type(exc).__name__}")
             print(f"Invio riepilogo non riuscito: {type(exc).__name__}", file=sys.stderr)
-            if error is None:
-                error = RuntimeError("Invio riepilogo Telegram non riuscito")
     state["_hourly_report"] = report
     STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
-    if error is not None:
-        raise error
+    if not record["ok"]:
+        raise RuntimeError("Una o piu verifiche/notifiche non sono riuscite; dettagli non sensibili nei log")
 
 
 if __name__ == "__main__":
     try:
         run_with_hourly_report()
     except Exception as exc:
-        print(f"ERRORE TECNICO: {exc}", file=sys.stderr)
+        print(f"ERRORE TECNICO: {type(exc).__name__}", file=sys.stderr)
         sys.exit(2)
