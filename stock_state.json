@@ -4,7 +4,21 @@
   "fiordaliso": false,
   "_hourly_report": {
     "since": "2026-11-07T18:00:59.232936+00:00",
-    "checks": [],
+    "checks": [
+      {
+        "at": "2026-11-07T18:01:16.621820+00:00",
+        "ok": true,
+        "stock": {
+          "MK2F4QL/A:carosello": false,
+          "MK2F4QL/A:liberty": false,
+          "MK2F4QL/A:fiordaliso": false,
+          "MK2G4QL/A:carosello": false,
+          "MK2G4QL/A:liberty": false,
+          "MK2G4QL/A:fiordaliso": false
+        },
+        "errors": []
+      }
+    ],
     "last_sent_hour": "2026-11-07T18"
   },
   "MK2F4QL/A:carosello": false,
