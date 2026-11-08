@@ -32,6 +32,9 @@ jobs:
       - name: Scarica repository
         uses: actions/checkout@v4
         with:
+          # Queued runs must check the current state, not the SHA captured at dispatch.
+          ref: main
+          fetch-depth: 0
           persist-credentials: true
 
       - name: Configura Python
@@ -53,6 +56,15 @@ jobs:
           git add stock_state.json
           if ! git diff --cached --quiet; then
             git commit -m "Update Apple stock state"
-            git push
+            # Preserve remote commits made while this check was running.
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+            done
+            echo "Impossibile salvare lo stato dopo 3 tentativi" >&2
+            exit 1
           fi
+
 
