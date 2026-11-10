@@ -9,15 +9,16 @@
   "MK2G4QL/A:liberty": false,
   "MK2G4QL/A:fiordaliso": false,
   "_last_check": {
-    "at": "2026-11-10T22:44:19.689977+00:00",
-    "ok": false,
+    "at": "2026-11-10T22:45:37.562034+00:00",
+    "ok": true,
     "stock": {
+      "MK2F4QL/A:carosello": false,
+      "MK2F4QL/A:liberty": false,
+      "MK2F4QL/A:fiordaliso": false,
       "MK2G4QL/A:carosello": false,
       "MK2G4QL/A:liberty": false,
       "MK2G4QL/A:fiordaliso": false
     },
-    "errors": [
-      "MK2F4QL/A: TimeoutError"
-    ]
+    "errors": []
   }
 }
